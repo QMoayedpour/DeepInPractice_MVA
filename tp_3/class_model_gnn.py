@@ -41,18 +41,3 @@ class StudentModel(nn.Module):
         x = self.o_1(x, edge_index) + self.o_2(x)
 
         return x
-
-
-# Initialize model
-model = StudentModel()
-
-## Save the model
-torch.save(model.state_dict(), "model.pth")
-
-
-### This is the part we will run in the inference to grade your model
-## Load the model
-model = StudentModel()  # !  Important : No argument
-model.load_state_dict(torch.load("model.pth", weights_only=True))
-model.eval()
-print("Model loaded successfully")
