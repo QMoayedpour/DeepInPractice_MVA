@@ -51,12 +51,12 @@ def precompute_features(
     dataloader = DataLoader(dataset, batch_size=64, shuffle=False)
 
     with torch.no_grad():
-        for batch in dataloader:
-            images = batch[0].to(device)
+        for images, labels in dataloader:
+            images = images.to(device)
             feat = get_feats(images)
             feat = feat.view(feat.size(0), -1)
             feats.append(feat.cpu())
-            labs.append(batch[1].cpu())
+            labs.append(labels.cpu())
 
     features = torch.cat(feats)
     labels = torch.cat(labs)
@@ -75,9 +75,9 @@ class LastLayer(nn.Module):
 
 class FinalModel(nn.Module):
     def __init__(self):
-        super(LastLayer, self).__init__()
-        # <YOUR CODE>
+        super(FinalModel, self).__init__()
+        self.model = models.resnet18(weights=None)
+        self.model.fc = nn.Linear(self.model.fc.in_features, 2)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # <YOUR CODE>
-        raise NotImplementedError("Implement the forward pass of the LastLayer module")
+        return self.model(x)
